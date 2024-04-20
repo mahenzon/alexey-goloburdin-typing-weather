@@ -6,7 +6,7 @@ Mac. [О whereami](https://github.com/robmathers/WhereAmI).
 [OpenWeather](https://openweathermap.org/api).
 
 Для запуска используйте python 3.10 (внешние библиотеки не требуются для работы
-приложения), в `config.py` проставьте API ключ для доступа к OpenWeather и 
+приложения), в `config.py` проставьте API ключ для доступа к OpenWeather и
 запустите:
 
 
@@ -18,5 +18,3 @@ Mac. [О whereami](https://github.com/robmathers/WhereAmI).
 
 Данный материал подготовлен в качестве примера к [видео](https://www.youtube.com/watch?v=dKxiHlZvULQ) и [книге
 «Типизированный Python»](https://t.me/t0digital/151).
-
-

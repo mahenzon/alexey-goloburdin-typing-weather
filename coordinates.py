@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from subprocess import Popen, PIPE
+from subprocess import Popen
+from subprocess import PIPE
 from typing import Literal
 
 import config
@@ -17,10 +18,12 @@ def get_gps_coordinates() -> Coordinates:
     coordinates = _get_whereami_coordinates()
     return _round_coordinates(coordinates)
 
+
 def _get_whereami_coordinates() -> Coordinates:
     whereami_output = _get_whereami_output()
     coordinates = _parse_coordinates(whereami_output)
     return coordinates
+
 
 def _get_whereami_output() -> bytes:
     process = Popen(["whereami"], stdout=PIPE)
@@ -30,6 +33,7 @@ def _get_whereami_output() -> bytes:
         raise CantGetCoordinates
     return output
 
+
 def _parse_coordinates(whereami_output: bytes) -> Coordinates:
     try:
         output = whereami_output.decode().strip().lower().split("\n")
@@ -37,17 +41,19 @@ def _parse_coordinates(whereami_output: bytes) -> Coordinates:
         raise CantGetCoordinates
     return Coordinates(
         latitude=_parse_coord(output, "latitude"),
-        longitude=_parse_coord(output, "longitude")
+        longitude=_parse_coord(output, "longitude"),
     )
 
+
 def _parse_coord(
-        output: list[str],
-        coord_type: Literal["latitude"] | Literal["longitude"]) -> float:
+    output: list[str],
+    coord_type: Literal["latitude"] | Literal["longitude"],
+) -> float:
     for line in output:
         if line.startswith(f"{coord_type}:"):
             return _parse_float_coordinate(line.split()[1])
-    else:
-        raise CantGetCoordinates
+    raise CantGetCoordinates
+
 
 def _parse_float_coordinate(value: str) -> float:
     try:
@@ -55,13 +61,16 @@ def _parse_float_coordinate(value: str) -> float:
     except ValueError:
         raise CantGetCoordinates
 
+
 def _round_coordinates(coordinates: Coordinates) -> Coordinates:
     if not config.USE_ROUNDED_COORDS:
         return coordinates
-    return Coordinates(*map(
-        lambda c: round(c, 1),
-        [coordinates.latitude, coordinates.longitude]
-    ))
+    return Coordinates(
+        *(
+            round(c, 1)
+            for c in [coordinates.latitude, coordinates.longitude]
+        ),
+    )
 
 
 if __name__ == "__main__":
